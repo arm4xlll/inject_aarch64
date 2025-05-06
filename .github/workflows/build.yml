@@ -1,0 +1,34 @@
+# .github/workflows/build-macos.yml
+name: Build inject_aarch64 on macOS
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Xcode command-line tools
+        run: |
+          sudo xcode-select --install || true
+
+      - name: Build injectors
+        run: |
+          make
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: inject_aarch64-binaries
+          path: |
+            inject_arm64
+            inject_arm64e
+            inject_arm64ea
